@@ -1,21 +1,25 @@
-﻿using KitchenLib;
+﻿using Kitchen;
+using KitchenLib;
 using KitchenLib.Event;
+using KitchenLib.References;
 using KitchenMods;
+using KitchenStartingMealSelector;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
 // Namespace should have "Kitchen" in the beginning
-namespace KitchenMyMod
+namespace KitchenOverstocked
 {
     public class Mod : BaseMod, IModSystem
     {
         // GUID must be unique and is recommended to be in reverse domain name notation
         // Mod Name is displayed to the player and listed in the mods menu
         // Mod Version must follow semver notation e.g. "1.2.3"
-        public const string MOD_GUID = "com.example.mymod";
-        public const string MOD_NAME = "My Mod";
-        public const string MOD_VERSION = "0.1.0";
-        public const string MOD_AUTHOR = "My Name";
+        public const string MOD_GUID = "com.stonepaw.overstocked";
+        public const string MOD_NAME = "Overstocked";
+        public const string MOD_VERSION = "0.2.0";
+        public const string MOD_AUTHOR = "Stonepaw";
         public const string MOD_GAMEVERSION = ">=1.1.4";
         // Game version this mod is designed for in semver
         // e.g. ">=1.1.3" current and all future
@@ -28,22 +32,27 @@ namespace KitchenMyMod
         public const bool DEBUG_MODE = false;
 #endif
 
+        public static bool CreateCrate = false;
+        public static int ApplianceId = ApplianceReferences.BlueprintCabinet;
+        public static bool AutoRestock = false;
+        public static bool AutoRestockChanged = false;
+
         public static AssetBundle Bundle;
+
+        public static bool RefreshOptions = false;
+
+        public static List<int> LoadedAvailableApplianceIds = new();
+
+        public static List<string> LoadedAvailableApplianceNames = new();
+
+        public static Dictionary<string, Dictionary<int, string>> LoadedAvailableAppliances = new();
 
         public Mod() : base(MOD_GUID, MOD_NAME, MOD_AUTHOR, MOD_VERSION, MOD_GAMEVERSION, Assembly.GetExecutingAssembly()) { }
 
         protected override void OnInitialise()
         {
             LogWarning($"{MOD_GUID} v{MOD_VERSION} in use!");
-        }
-
-        private void AddGameData()
-        {
-            LogInfo("Attempting to register game data...");
-
-            // AddGameDataObject<MyCustomGDO>();
-
-            LogInfo("Done loading game data.");
+            initPauseMenu();
         }
 
         protected override void OnUpdate()
@@ -52,21 +61,19 @@ namespace KitchenMyMod
 
         protected override void OnPostActivate(KitchenMods.Mod mod)
         {
-            // TODO: Uncomment the following if you have an asset bundle.
-            // TODO: Also, make sure to set EnableAssetBundleDeploy to 'true' in your ModName.csproj
+ 
+          
+        }
 
-            // LogInfo("Attempting to load asset bundle...");
-            // Bundle = mod.GetPacks<AssetBundleModPack>().SelectMany(e => e.AssetBundles).First();
-            // LogInfo("Done loading asset bundle.");
 
-            // Register custom GDOs
-            AddGameData();
-
-            // Perform actions when game data is built
-            Events.BuildGameDataEvent += delegate (object s, BuildGameDataEventArgs args)
-            {
+        private void initPauseMenu()
+        {
+            ModsPreferencesMenu<PauseMenuAction>.RegisterMenu(MOD_NAME, typeof(OverstockedMenu<PauseMenuAction>), typeof(PauseMenuAction));
+            Events.PreferenceMenu_PauseMenu_CreateSubmenusEvent += (s, args) => {
+                args.Menus.Add(typeof(OverstockedMenu<PauseMenuAction>), new OverstockedMenu<PauseMenuAction>(args.Container, args.Module_list));
             };
         }
+
         #region Logging
         public static void LogInfo(string _log) { Debug.Log($"[{MOD_NAME}] " + _log); }
         public static void LogWarning(string _log) { Debug.LogWarning($"[{MOD_NAME}] " + _log); }

@@ -18,6 +18,7 @@
 		<EnableAssetBundleDeploy>false</EnableAssetBundleDeploy>
 		<!-- Change this if your mod.assets is located elsewhere than the default location -->
 		<AssetBundlePath>$(ProjectDir)content\mod.assets</AssetBundlePath>
+		<RootNamespace>Kitchen$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
 	</PropertyGroup>
 	
 	<!-- Exclude build artifacts and Unity project -->
@@ -38,6 +39,21 @@
   
 	<ItemGroup>
 		<PackageReference Include="Yariazen.PlateUp.ModBuildUtilities" Version="1.7.26" />
+	</ItemGroup>
+  
+	<ItemGroup>
+	  <Compile Update="Properties\Settings.Designer.cs">
+	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Settings.settings</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+  
+	<ItemGroup>
+	  <None Update="Properties\Settings.settings">
+	    <Generator>SettingsSingleFileGenerator</Generator>
+	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	  </None>
 	</ItemGroup>
 
 	<Target Name="BundleWorkshop" AfterTargets="Build" Condition="$(EnableModDeployLocal) == 'true'">
