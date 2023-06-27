@@ -31,7 +31,7 @@ namespace KitchenOverstocked
                                 Redraw(Mod.LoadedAvailableAppliances[value]);
                             };
 
-            AutoRestockOption = new Option<bool>(new List<bool> { true, false }, false, new List<string> { "Enabled", "Disabled" });
+            AutoRestockOption = new Option<bool>(new List<bool> { true, false }, Mod.AutoRestock, new List<string> { "Enabled", "Disabled" });
             AutoRestockOption.OnChanged += delegate (object _, bool value)
             {
                 Mod.LogInfo("Setting autostocked to " + value);
@@ -46,9 +46,6 @@ namespace KitchenOverstocked
         private void Redraw(Dictionary<int, string> variants)
         {
             ModuleList.Clear();
-
-            AddLabel("Auto Restock");
-            AddSelect(AutoRestockOption);
 
             AddLabel("What crate would you like generate?");
             AddSelect(GroupSelector);
@@ -71,6 +68,9 @@ namespace KitchenOverstocked
             //});
 
             Mod.ApplianceId = variants.Keys.First();
+
+            AddLabel("Auto Restock");
+            AddSelect(AutoRestockOption);
         }
 
     }
