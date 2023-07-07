@@ -1,9 +1,9 @@
 ﻿using Kitchen;
 using KitchenLib;
 using KitchenLib.Event;
-using KitchenLib.References;
+using KitchenLib.Preferences;
+using KitchenLib.Utils;
 using KitchenMods;
-using KitchenStartingMealSelector;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -18,7 +18,7 @@ namespace KitchenOverstocked
         // Mod Version must follow semver notation e.g. "1.2.3"
         public const string MOD_GUID = "com.stonepaw.overstocked";
         public const string MOD_NAME = "Overstocked";
-        public const string MOD_VERSION = "0.2.0";
+        public const string MOD_VERSION = "0.2.1";
         public const string MOD_AUTHOR = "Stonepaw";
         public const string MOD_GAMEVERSION = ">=1.1.5";
         // Game version this mod is designed for in semver
@@ -32,14 +32,9 @@ namespace KitchenOverstocked
         public const bool DEBUG_MODE = false;
 #endif
 
-        public static bool CreateCrate = false;
-        public static int ApplianceId = ApplianceReferences.BlueprintCabinet;
-        public static bool AutoRestock = false;
-        public static bool AutoRestockChanged = false;
+        public static bool AutoRestock = true;
 
         public static AssetBundle Bundle;
-
-        public static bool RefreshOptions = false;
 
         public static List<int> LoadedAvailableApplianceIds = new();
 
@@ -60,9 +55,7 @@ namespace KitchenOverstocked
         }
 
         protected override void OnPostActivate(KitchenMods.Mod mod)
-        {
- 
-          
+        { 
         }
 
 

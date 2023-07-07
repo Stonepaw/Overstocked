@@ -74,7 +74,7 @@ namespace KitchenOverstocked
 
         protected override void OnUpdate()
         {
-            if (!(Has<CSceneFirstFrame>() || Mod.RefreshOptions))
+            if (!(Has<CSceneFirstFrame>()))
             {
                 return;
             }
@@ -158,8 +158,6 @@ namespace KitchenOverstocked
             }
 
             Mod.LoadedAvailableAppliances.Add("Decorations", decorationVariants);
-
-            Mod.RefreshOptions = false;
         }
     }
 }

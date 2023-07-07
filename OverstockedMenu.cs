@@ -1,6 +1,9 @@
 ﻿using Kitchen;
 using Kitchen.Modules;
+using KitchenData;
 using KitchenLib;
+using KitchenLib.References;
+using KitchenLib.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -13,6 +16,7 @@ namespace KitchenOverstocked
 
         private Option<string> GroupSelector;
         private Option<bool> AutoRestockOption;
+        private int ApplianceId = ApplianceReferences.BlueprintCabinet;
 
         public OverstockedMenu(Transform container, ModuleList module_list) : base(container, module_list)
         { }
@@ -36,9 +40,7 @@ namespace KitchenOverstocked
             {
                 Mod.LogInfo("Setting autostocked to " + value);
                 Mod.AutoRestock = value;
-                Mod.AutoRestockChanged = true;
             };
-
 
             Redraw(Mod.LoadedAvailableAppliances[applianceNames[0]]);
         }
@@ -54,20 +56,17 @@ namespace KitchenOverstocked
 
             Add(new Option<int>(variants.Keys.ToList(), variants.Keys.First(), variants.Values.ToList())).OnChanged += delegate (object _, int value)
             {
-                Mod.ApplianceId = value;
+                ApplianceId = value;
             };
 
             AddButton("Create", delegate
             {
-                Mod.CreateCrate = true;
+                var entityManager = EntityUtils.GetEntityManager();
+                var entity = entityManager.CreateEntity();
+                entityManager.AddComponentData(entity, new CCreateCrate { applianceId = ApplianceId });
             });
 
-            //AddButton("Refresh Options", delegate {
-            //    Mod.RefreshOptions = true;
-            //    RequestPreviousMenu();
-            //});
-
-            Mod.ApplianceId = variants.Keys.First();
+            ApplianceId = variants.Keys.First();
 
             AddLabel("Auto Restock");
             AddSelect(AutoRestockOption);

@@ -1,8 +1,4 @@
 ﻿using Kitchen;
-using KitchenData;
-using KitchenLib;
-using KitchenLib.References;
-using KitchenLib.Utils;
 using Unity.Collections;
 using Unity.Entities;
 
@@ -10,55 +6,58 @@ namespace KitchenOverstocked
 {
     class CrateCreatorSystem : FranchiseSystem
     {
-        private EntityQuery CPersistentItemStorageLocations;
+        private EntityQuery garageItemHolders;
+        private EntityQuery createCrates;
 
         protected override void Initialise()
         {
             base.Initialise();
-            CPersistentItemStorageLocations = GetEntityQuery(typeof(CPersistentItemStorageLocation));
+            garageItemHolders = GetEntityQuery(new QueryHelper().All(typeof(CPersistentItemStorageLocation), typeof(CItemHolder)));
+            createCrates = GetEntityQuery(typeof(CCreateCrate));
+            RequireForUpdate(createCrates);
         }
         protected override void OnUpdate()
         {
-            if(!Mod.CreateCrate)
+            using var currentCreateCreates = createCrates.ToComponentDataArray<CCreateCrate>(Allocator.Temp);
+
+            foreach (var item in currentCreateCreates)
             {
-                return;
-            }
 
-            var applianceId = Mod.ApplianceId;
+                using var currentGarageItemHolders = this.garageItemHolders.ToComponentDataArray<CItemHolder>(Allocator.Temp);
 
+                CItemHolder? unUsedItemHolder = null;
 
-            using var garageHolders = CPersistentItemStorageLocations.ToEntityArray(Allocator.Temp);
+                foreach (var pedastle in currentGarageItemHolders)
+                {
 
-            CItemHolder? unUsedItemHolder = null;
-
-            foreach(var pedastle in garageHolders)
-            {
-                if(Require<CItemHolder>(pedastle, out CItemHolder itemHolder)) {
-                    if(itemHolder.HeldItem == default)
+                    if (pedastle.HeldItem == default)
                     {
-                        unUsedItemHolder = itemHolder;
+                        unUsedItemHolder = pedastle;
                         break;
                     }
+
                 }
+
+                if (unUsedItemHolder == null)
+                {
+                    Mod.LogInfo("Skipping generate the crate because an empty garage pedastle does not exist.");
+                    break;
+
+                }
+
+                var applianceId = item.applianceId;
+
+                Mod.LogInfo($"Generating crate with applianceId {applianceId}");
+
+                // We create it similarly to how the TriggerWorkshopCrafting works, the garage seems to just pickup the new crate and put it on a shelf
+                var entity = EntityManager.CreateEntity();
+                Set(entity, new CUpgrade { ID = applianceId });
             }
 
-            if(unUsedItemHolder == null)
+            if (currentCreateCreates.Length > 0)
             {
-                Mod.LogInfo("Skipping generate the crate because an empty garage pedastle does not exist.");
-                Mod.CreateCrate = false;
-                return;
-
+                EntityManager.DestroyEntity(createCrates);
             }
-
-            Mod.LogInfo($"Generating crate with applianceId {applianceId}");
-
-            // We create it similarly to how the TriggerWorkshopCrafting works
-            var entityManger = EntityUtils.GetEntityManager();
-            var entity = entityManger.CreateEntity();
-
-            Set(entity, new CUpgrade { ID = Mod.ApplianceId });
-
-            Mod.CreateCrate = false;
         }
     }
 }
