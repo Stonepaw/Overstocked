@@ -39,7 +39,7 @@ namespace KitchenOverstocked
             ApplianceReferences.UpgradeKit,
         };
 
-        private static int[] tools =
+        private static readonly int[] tools =
         {
             ApplianceReferences.FireExtinguisherHolder,
             ApplianceReferences.ScrubbingBrushProvider,
@@ -50,7 +50,7 @@ namespace KitchenOverstocked
             ApplianceReferences.TrayStand,
         };
 
-        private static int[] consumables =
+        private static readonly int[] consumables =
         {
             ApplianceReferences.BreadstickBox,
             ApplianceReferences.CandleBox,
@@ -60,7 +60,7 @@ namespace KitchenOverstocked
             ApplianceReferences.SupplyCabinet,
         };
 
-        private static int[] decorations =
+        private static readonly int[] decorations =
         {
             ApplianceReferences.Painting,
             ApplianceReferences.Plant,

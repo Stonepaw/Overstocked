@@ -1,13 +1,11 @@
 ﻿using Kitchen;
 using Kitchen.Modules;
-using KitchenData;
 using KitchenLib;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 namespace KitchenOverstocked
 {
@@ -23,7 +21,7 @@ namespace KitchenOverstocked
 
         public override void Setup(int player_id)
         {
-            AddLabel("What crate would you like generate?");
+            AddLabel("What crate would you like order?");
             var applianceNames = Mod.LoadedAvailableAppliances.Keys.ToList();
             applianceNames.Sort();
 
@@ -49,7 +47,7 @@ namespace KitchenOverstocked
         {
             ModuleList.Clear();
 
-            AddLabel("What crate would you like generate?");
+            AddLabel("What crate would you like order?");
             AddSelect(GroupSelector);
 
             AddLabel("Variant");
@@ -59,7 +57,7 @@ namespace KitchenOverstocked
                 ApplianceId = value;
             };
 
-            AddButton("Create", delegate
+            AddButton("Order", delegate
             {
                 var entityManager = EntityUtils.GetEntityManager();
                 var entity = entityManager.CreateEntity();
