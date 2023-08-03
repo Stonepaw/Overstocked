@@ -3,8 +3,6 @@ using KitchenData;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using System.Collections.Generic;
-using Unity.Collections;
-using Unity.Entities;
 
 namespace KitchenOverstocked
 {
@@ -18,6 +16,7 @@ namespace KitchenOverstocked
             ApplianceReferences.CoffeeTable,
             ApplianceReferences.Combiner,
             ApplianceReferences.Countertop,
+            ApplianceReferences.DirtyPlateStack,
             ApplianceReferences.Dumbwaiter,
             ApplianceReferences.ExtraLife,
             ApplianceReferences.FloorBufferStation,
@@ -26,6 +25,7 @@ namespace KitchenOverstocked
             ApplianceReferences.GasLimiter,
             ApplianceReferences.GasSafetyOverride,
             ApplianceReferences.Hob,
+            ApplianceReferences.HostStand,
             ApplianceReferences.Mixer,
             ApplianceReferences.MopBucket,
             ApplianceReferences.OrderingTerminal,
@@ -41,6 +41,7 @@ namespace KitchenOverstocked
 
         private static readonly int[] tools =
         {
+            -2070005162, // Clipboard Stand. TODO: Update when kitchenlib updates
             ApplianceReferences.FireExtinguisherHolder,
             ApplianceReferences.ScrubbingBrushProvider,
             ApplianceReferences.SharpKnifeProvider,
@@ -79,7 +80,7 @@ namespace KitchenOverstocked
                 return;
             }
 
-            Mod.LogWarning("Loading available appliances...");
+            Mod.LogInfo("Loading available appliances...");
 
             Mod.LoadedAvailableAppliances.Clear();
 
@@ -103,7 +104,11 @@ namespace KitchenOverstocked
                 foreach (var upgrade in appliance.Upgrades)
                 {
                     Mod.LogInfo($"{appliance.Name} - {upgrade.Name}");
-                    variants.Add(upgrade.ID, upgrade.Name);
+                    // The deconstructor mod causes an issue because it loops the blueprint cabinet to a deconstructor and back
+                    if (!variants.ContainsKey(upgrade.ID))
+                    {
+                        variants.Add(upgrade.ID, upgrade.Name);
+                    }
                 }
             }
 
@@ -119,13 +124,19 @@ namespace KitchenOverstocked
             foreach (var upgrade in belt.Upgrades)
             {
                 Mod.LogInfo($"{belt.Name} - {upgrade.Name}");
-                belts.Add(upgrade.ID, upgrade.Name);
+                if (!belts.ContainsKey(upgrade.ID))
+                {
+                    belts.Add(upgrade.ID, upgrade.Name);
+                }
 
                 var upgradeAppliance = (Appliance)GDOUtils.GetExistingGDO(upgrade.ID);
 
                 foreach (var nestedUpgrade in upgradeAppliance.Upgrades)
                 {
-                    belts.Add(nestedUpgrade.ID, nestedUpgrade.Name);
+                    if (!belts.ContainsKey(nestedUpgrade.ID))
+                    {
+                        belts.Add(nestedUpgrade.ID, nestedUpgrade.Name);
+                    }
                 }
             }
 
@@ -134,7 +145,10 @@ namespace KitchenOverstocked
             foreach (var consumableId in consumables)
             {
                 Appliance appliance = (Appliance)GDOUtils.GetExistingGDO(consumableId);
-                consumableVariants.Add(appliance.ID, appliance.Name);
+                if (!consumableVariants.ContainsKey(appliance.ID))
+                {
+                    consumableVariants.Add(appliance.ID, appliance.Name);
+                }
             }
 
             Mod.LoadedAvailableAppliances.Add("Consumables", consumableVariants);
@@ -144,7 +158,10 @@ namespace KitchenOverstocked
             foreach (var toolId in tools)
             {
                 Appliance appliance = (Appliance)GDOUtils.GetExistingGDO(toolId);
-                toolsVariants.Add(appliance.ID, appliance.Name);
+                if (!toolsVariants.ContainsKey(appliance.ID))
+                {
+                    toolsVariants.Add(appliance.ID, appliance.Name);
+                }
             }
 
             Mod.LoadedAvailableAppliances.Add("Tools", toolsVariants);
@@ -154,7 +171,10 @@ namespace KitchenOverstocked
             foreach (var decorationId in decorations)
             {
                 Appliance appliance = (Appliance)GDOUtils.GetExistingGDO(decorationId);
-                decorationVariants.Add(appliance.ID, appliance.Name);
+                if (!decorationVariants.ContainsKey(appliance.ID))
+                {
+                    decorationVariants.Add(appliance.ID, appliance.Name);
+                }
             }
 
             Mod.LoadedAvailableAppliances.Add("Decorations", decorationVariants);
