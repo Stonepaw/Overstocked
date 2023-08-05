@@ -68,6 +68,15 @@ namespace KitchenOverstocked
             ApplianceReferences.Rug,
         };
 
+        private static readonly int[] bakingTrays =
+        {
+            -660310536, // Big Cake Tin
+            -2135982034, // Brownie Tray
+            -1723125645, // Cookie Tray
+            -315287689, // Cupcake tray
+            2136474391, // Doughnut Tray
+        };
+
         protected override void Initialise()
         {
             base.Initialise();
@@ -178,6 +187,20 @@ namespace KitchenOverstocked
             }
 
             Mod.LoadedAvailableAppliances.Add("Decorations", decorationVariants);
+
+
+            var baking = new Dictionary<int, string>();
+
+            foreach(var bakingId in bakingTrays)
+            {
+                Appliance appliance = (Appliance)GDOUtils.GetExistingGDO(bakingId);
+                if(!baking.ContainsKey(appliance.ID))
+                {
+                    baking.Add(appliance.ID, appliance.name.Replace("Source -", ""));
+                }
+            }
+
+            Mod.LoadedAvailableAppliances.Add("Baking", baking);
         }
     }
 }
