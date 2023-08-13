@@ -174,7 +174,7 @@ namespace KitchenOverstocked
         {
             var appliances = new Dictionary<int, string>();
 
-            foreach(var applianceId in applianceIds)
+            foreach (var applianceId in applianceIds)
             {
                 Appliance appliance = (Appliance)GDOUtils.GetExistingGDO(applianceId);
                 if (!appliances.ContainsKey(appliance.ID))
@@ -188,5 +188,5 @@ namespace KitchenOverstocked
     }
 
 
-   
+
 }

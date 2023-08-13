@@ -18,9 +18,10 @@ namespace KitchenOverstocked
             crateShelvesWithoutCrateProvider = GetEntityQuery(new QueryHelper().All(typeof(CPersistentItemStorageLocation), typeof(CItemHolder)).None(typeof(CCrateItemProvider)));
             RequireForUpdate(crateShelvesWithoutCrateProvider);
         }
+
         protected override void OnUpdate()
         {
-            if (Mod.AutoRestock)
+            if (Mod.AutoRestock.Get())
             {
                 using var garageShelves = crateShelvesWithoutCrateProvider.ToEntityArray(Allocator.Temp);
 
