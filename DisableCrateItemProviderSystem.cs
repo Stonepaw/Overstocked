@@ -20,7 +20,7 @@ namespace KitchenOverstocked
         }
         protected override void OnUpdate()
         {
-            if (!Mod.AutoRestock)
+            if (!Mod.AutoRestock.Get())
             {
                 Mod.LogInfo("Disabling providers");
                 EntityManager.RemoveComponent<CCrateItemProvider>(crateItemProviders);

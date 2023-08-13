@@ -19,6 +19,13 @@ namespace KitchenOverstocked
             return true;
         }
 
+        protected override void Initialise()
+        {
+            base.Initialise();
+            // Only Run in the franchise mode.
+            RequireSingletonForUpdate<SFranchiseMarker>();
+        }
+
         protected override void Perform(ref InteractionData data)
         {
             HasMadeChanges = true;
@@ -37,7 +44,6 @@ namespace KitchenOverstocked
                 return false;
             }
 
-
             if (!Require<CItemHolder>(data.Interactor, out CItemHolder itemHolder) || itemHolder.HeldItem == default(Entity))
             {
 
@@ -51,8 +57,7 @@ namespace KitchenOverstocked
 
             }
 
-
-            if(cUpgrade.ID != Provider.applianceId)
+            if (cUpgrade.ID != Provider.applianceId)
             {
                 return false;
             }

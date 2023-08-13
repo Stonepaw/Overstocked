@@ -1,6 +1,7 @@
 ﻿using Kitchen;
 using KitchenLib;
 using KitchenLib.Event;
+using KitchenLib.Preferences;
 using KitchenMods;
 using System.Collections.Generic;
 using System.Reflection;
@@ -29,9 +30,6 @@ namespace KitchenOverstocked
 #else
         public const bool DEBUG_MODE = false;
 #endif
-
-        public static bool AutoRestock = true;
-
         public static AssetBundle Bundle;
 
         public static List<int> LoadedAvailableApplianceIds = new();
@@ -40,11 +38,20 @@ namespace KitchenOverstocked
 
         public static Dictionary<string, Dictionary<int, string>> LoadedAvailableAppliances = new();
 
+        public static PreferenceManager PreferenceManager = new("com.stonepaw.overstocked");
+
+        public static PreferenceBool DestroyCratesEnabled;
+
+        public static PreferenceBool AutoRestock;
+
         public Mod() : base(MOD_GUID, MOD_NAME, MOD_AUTHOR, MOD_VERSION, MOD_GAMEVERSION, Assembly.GetExecutingAssembly()) { }
 
         protected override void OnInitialise()
         {
             LogWarning($"{MOD_GUID} v{MOD_VERSION} in use!");
+            DestroyCratesEnabled = PreferenceManager.RegisterPreference(new PreferenceBool("destroy_crates_enabled", false));
+            AutoRestock = PreferenceManager.RegisterPreference(new PreferenceBool("auto_restock", true));
+            PreferenceManager.Load();
             initPauseMenu();
         }
 
@@ -53,14 +60,15 @@ namespace KitchenOverstocked
         }
 
         protected override void OnPostActivate(KitchenMods.Mod mod)
-        { 
+        {
         }
 
 
         private void initPauseMenu()
         {
             ModsPreferencesMenu<PauseMenuAction>.RegisterMenu(MOD_NAME, typeof(OverstockedMenu<PauseMenuAction>), typeof(PauseMenuAction));
-            Events.PreferenceMenu_PauseMenu_CreateSubmenusEvent += (s, args) => {
+            Events.PreferenceMenu_PauseMenu_CreateSubmenusEvent += (s, args) =>
+            {
                 args.Menus.Add(typeof(OverstockedMenu<PauseMenuAction>), new OverstockedMenu<PauseMenuAction>(args.Container, args.Module_list));
             };
         }

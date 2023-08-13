@@ -32,16 +32,18 @@ namespace KitchenOverstocked
                     continue;
                 }
 
-                if (!Require(entity, out CCrateItemProvider crateItemProvider)) {
-                    continue;
-                }
-
-                if(crateItemProvider.applianceId == null)
+                if (!Require(entity, out CCrateItemProvider crateItemProvider))
                 {
                     continue;
                 }
 
-                if (itemHolder.HeldItem != default(Entity)) {
+                if (crateItemProvider.applianceId == null)
+                {
+                    continue;
+                }
+
+                if (itemHolder.HeldItem != default(Entity))
+                {
                     continue;
                 }
 

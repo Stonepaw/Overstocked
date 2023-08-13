@@ -3,6 +3,7 @@ using KitchenData;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using System.Collections.Generic;
+using UnityEngine.UIElements.Experimental;
 
 namespace KitchenOverstocked
 {
@@ -39,10 +40,21 @@ namespace KitchenOverstocked
             ApplianceReferences.UpgradeKit,
         };
 
+
+        private static readonly int[] coffeeAppliances =
+        {
+            ApplianceReferences.CoffeeMachine,
+            ApplianceReferences.IceDispenser,
+            ApplianceReferences.MilkDispenser,
+            ApplianceReferences.SourceCakeStand,
+
+        };
+
         private static readonly int[] tools =
         {
             -2070005162, // Clipboard Stand. TODO: Update when kitchenlib updates
             ApplianceReferences.FireExtinguisherHolder,
+            ApplianceReferences.RollingPinProvider,
             ApplianceReferences.ScrubbingBrushProvider,
             ApplianceReferences.SharpKnifeProvider,
             ApplianceReferences.ShoeRackTrainers,
@@ -55,6 +67,7 @@ namespace KitchenOverstocked
         {
             ApplianceReferences.BreadstickBox,
             ApplianceReferences.CandleBox,
+            ApplianceReferences.FlowerPot,
             ApplianceReferences.NapkinBox,
             ApplianceReferences.SharpCutlery,
             ApplianceReferences.SpecialsMenuBox,
@@ -149,58 +162,31 @@ namespace KitchenOverstocked
                 }
             }
 
-            var consumableVariants = new Dictionary<int, string>();
+            Mod.LoadedAvailableAppliances.Add("Baking", CreateApplianceDictionary(bakingTrays));
+            Mod.LoadedAvailableAppliances.Add("Coffee", CreateApplianceDictionary(coffeeAppliances));
+            Mod.LoadedAvailableAppliances.Add("Consumables", CreateApplianceDictionary(consumables));
+            Mod.LoadedAvailableAppliances.Add("Decorations", CreateApplianceDictionary(decorations));
+            Mod.LoadedAvailableAppliances.Add("Tools", CreateApplianceDictionary(tools));
+        }
 
-            foreach (var consumableId in consumables)
+
+        private Dictionary<int, string> CreateApplianceDictionary(int[] applianceIds)
+        {
+            var appliances = new Dictionary<int, string>();
+
+            foreach (var applianceId in applianceIds)
             {
-                Appliance appliance = (Appliance)GDOUtils.GetExistingGDO(consumableId);
-                if (!consumableVariants.ContainsKey(appliance.ID))
+                Appliance appliance = (Appliance)GDOUtils.GetExistingGDO(applianceId);
+                if (!appliances.ContainsKey(appliance.ID))
                 {
-                    consumableVariants.Add(appliance.ID, appliance.Name);
+                    appliances.Add(appliance.ID, appliance.name.Replace("Source -", "").Replace("Provider", ""));
                 }
             }
 
-            Mod.LoadedAvailableAppliances.Add("Consumables", consumableVariants);
-
-            var toolsVariants = new Dictionary<int, string>();
-
-            foreach (var toolId in tools)
-            {
-                Appliance appliance = (Appliance)GDOUtils.GetExistingGDO(toolId);
-                if (!toolsVariants.ContainsKey(appliance.ID))
-                {
-                    toolsVariants.Add(appliance.ID, appliance.Name);
-                }
-            }
-
-            Mod.LoadedAvailableAppliances.Add("Tools", toolsVariants);
-
-            var decorationVariants = new Dictionary<int, string>();
-
-            foreach (var decorationId in decorations)
-            {
-                Appliance appliance = (Appliance)GDOUtils.GetExistingGDO(decorationId);
-                if (!decorationVariants.ContainsKey(appliance.ID))
-                {
-                    decorationVariants.Add(appliance.ID, appliance.Name);
-                }
-            }
-
-            Mod.LoadedAvailableAppliances.Add("Decorations", decorationVariants);
-
-
-            var baking = new Dictionary<int, string>();
-
-            foreach(var bakingId in bakingTrays)
-            {
-                Appliance appliance = (Appliance)GDOUtils.GetExistingGDO(bakingId);
-                if(!baking.ContainsKey(appliance.ID))
-                {
-                    baking.Add(appliance.ID, appliance.name.Replace("Source -", ""));
-                }
-            }
-
-            Mod.LoadedAvailableAppliances.Add("Baking", baking);
+            return appliances;
         }
     }
+
+
+
 }
