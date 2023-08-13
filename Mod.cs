@@ -17,9 +17,9 @@ namespace KitchenOverstocked
         // Mod Version must follow semver notation e.g. "1.2.3"
         public const string MOD_GUID = "com.stonepaw.overstocked";
         public const string MOD_NAME = "Overstocked";
-        public const string MOD_VERSION = "1.2.0";
+        public const string MOD_VERSION = "1.3.0";
         public const string MOD_AUTHOR = "Stonepaw";
-        public const string MOD_GAMEVERSION = ">=1.1.6";
+        public const string MOD_GAMEVERSION = ">=1.1.7";
         // Game version this mod is designed for in semver
         // e.g. ">=1.1.3" current and all future
         // e.g. ">=1.1.3 <=1.2.3" for all from/until
