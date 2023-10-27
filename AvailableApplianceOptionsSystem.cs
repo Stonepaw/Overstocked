@@ -3,7 +3,6 @@ using KitchenData;
 using KitchenLib.References;
 using KitchenLib.Utils;
 using System.Collections.Generic;
-using UnityEngine.UIElements.Experimental;
 
 namespace KitchenOverstocked
 {
@@ -52,7 +51,7 @@ namespace KitchenOverstocked
 
         private static readonly int[] tools =
         {
-            -2070005162, // Clipboard Stand. TODO: Update when kitchenlib updates
+            ApplianceReferences.ClipboardStand,
             ApplianceReferences.FireExtinguisherHolder,
             ApplianceReferences.RollingPinProvider,
             ApplianceReferences.ScrubbingBrushProvider,
@@ -83,11 +82,41 @@ namespace KitchenOverstocked
 
         private static readonly int[] bakingTrays =
         {
-            -660310536, // Big Cake Tin
-            -2135982034, // Brownie Tray
-            -1723125645, // Cookie Tray
-            -315287689, // Cupcake tray
-            2136474391, // Doughnut Tray
+            ApplianceReferences.SourceBigCakeTin,
+            ApplianceReferences.SourceBrownieTray,
+            ApplianceReferences.SourceCookieTray,
+            ApplianceReferences.SourceCupcakeTray,
+            ApplianceReferences.SourceDoughnutTray,
+        };
+
+        private static readonly int[] cooking =
+        {
+            ApplianceReferences.PotStack,
+        };
+
+
+
+        private static readonly int[] magic = {
+            -292467039, // Enchanting Desk
+            782648278, // Cauldron
+            -1992638820 , // Enchanted Broom
+            540526865, // Enchanted Plates
+            -1946127856, // Ghostly Clipboard
+            1313278365, // Ghostly Knife
+            689268680, // Ghostly Rolling Pin
+            -560953757, // Ghost Scrubber
+            -1780646993 , // Illusion Wall
+            1150470926 , // Instant Wand
+            2044081363 , // Levitation Line
+            119166501 , // Levitation Station
+            267288096 , // Magic Apple Tree
+            744482650 , // Magic Mirror
+            -1696198539 , // Magic Spring
+            29164230 , // Pouch of Holding
+            423254987 , // Preserving Station
+            -1688921160 , // Table - Sharing Cauldron
+            2000892639 , // Table - Stone
+            1492264331 , // Vanishing Circle
         };
 
         protected override void Initialise()
@@ -164,8 +193,10 @@ namespace KitchenOverstocked
 
             Mod.LoadedAvailableAppliances.Add("Baking", CreateApplianceDictionary(bakingTrays));
             Mod.LoadedAvailableAppliances.Add("Coffee", CreateApplianceDictionary(coffeeAppliances));
+            Mod.LoadedAvailableAppliances.Add("Cooking", CreateApplianceDictionary(cooking));
             Mod.LoadedAvailableAppliances.Add("Consumables", CreateApplianceDictionary(consumables));
             Mod.LoadedAvailableAppliances.Add("Decorations", CreateApplianceDictionary(decorations));
+            Mod.LoadedAvailableAppliances.Add("Magic", CreateApplianceDictionary(magic));
             Mod.LoadedAvailableAppliances.Add("Tools", CreateApplianceDictionary(tools));
         }
 
@@ -179,7 +210,7 @@ namespace KitchenOverstocked
                 Appliance appliance = (Appliance)GDOUtils.GetExistingGDO(applianceId);
                 if (!appliances.ContainsKey(appliance.ID))
                 {
-                    appliances.Add(appliance.ID, appliance.name.Replace("Source -", "").Replace("Provider", ""));
+                    appliances.Add(appliance.ID, appliance.Name.Replace("Source -", "").Replace("Provider", ""));
                 }
             }
 
