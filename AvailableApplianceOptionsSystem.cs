@@ -51,7 +51,7 @@ namespace KitchenOverstocked
 
         private static readonly int[] tools =
         {
-            ApplianceReferences.ClipboardStand,
+            -2070005162, // Clipboard Stand.
             ApplianceReferences.FireExtinguisherHolder,
             ApplianceReferences.RollingPinProvider,
             ApplianceReferences.ScrubbingBrushProvider,
@@ -82,19 +82,17 @@ namespace KitchenOverstocked
 
         private static readonly int[] bakingTrays =
         {
-            ApplianceReferences.SourceBigCakeTin,
-            ApplianceReferences.SourceBrownieTray,
-            ApplianceReferences.SourceCookieTray,
-            ApplianceReferences.SourceCupcakeTray,
-            ApplianceReferences.SourceDoughnutTray,
+           -660310536, // Big Cake Tin
+            -2135982034, // Brownie Tray
+            -1723125645, // Cookie Tray
+            -315287689, // Cupcake tray
+            2136474391, // Doughnut Tray
         };
 
         private static readonly int[] cooking =
         {
             ApplianceReferences.PotStack,
         };
-
-
 
         private static readonly int[] magic = {
             -292467039, // Enchanting Desk
@@ -198,6 +196,8 @@ namespace KitchenOverstocked
             Mod.LoadedAvailableAppliances.Add("Decorations", CreateApplianceDictionary(decorations));
             Mod.LoadedAvailableAppliances.Add("Magic", CreateApplianceDictionary(magic));
             Mod.LoadedAvailableAppliances.Add("Tools", CreateApplianceDictionary(tools));
+
+            Mod.LogInfo("Found all appliances");
         }
 
 
