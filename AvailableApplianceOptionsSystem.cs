@@ -92,6 +92,8 @@ namespace KitchenOverstocked
         private static readonly int[] cooking =
         {
             ApplianceReferences.PotStack,
+            ApplianceReferences.ServingBoardStack,
+            ApplianceReferences.WokStack,
         };
 
         private static readonly int[] magic = {
