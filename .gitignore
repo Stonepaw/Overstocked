@@ -396,8 +396,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-
-# Workshop folder compiled dll
-/WorkshopFolder/content/**/*.dll
-
-content/

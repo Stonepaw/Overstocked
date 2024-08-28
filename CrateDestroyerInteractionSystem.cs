@@ -1,11 +1,11 @@
 ﻿using Kitchen;
+using KitchenMods;
 using Unity.Entities;
 
 namespace KitchenOverstocked
 {
-    internal class CrateDestroyerInteractionSystem : ItemInteractionSystem
+    internal class CrateDestroyerInteractionSystem : ItemInteractionSystem, IModSystem
     {
-
         protected override InteractionType RequiredType => InteractionType.Act;
         protected override bool RequireHold => false;
 
@@ -18,12 +18,16 @@ namespace KitchenOverstocked
 
         protected override bool IsPossible(ref InteractionData data)
         {
-            if (!Mod.DestroyCratesEnabled.Get())
+            if (!Mod.DestroyCratesEnabled)
             {
                 return false;
             }
 
-            if (Has<CPersistentItemStorageLocation>(data.Target) && Require<CItemHolder>(data.Target, out CItemHolder holder) && holder.HeldItem != default(Entity))
+            if (
+                Has<CPersistentItemStorageLocation>(data.Target)
+                && Require<CItemHolder>(data.Target, out CItemHolder holder)
+                && holder.HeldItem != default(Entity)
+            )
             {
                 return true;
             }
@@ -37,7 +41,6 @@ namespace KitchenOverstocked
             {
                 data.Context.Remove<CCrateItemProvider>(data.Target);
             }
-
 
             if (Require<CItemHolder>(data.Target, out CItemHolder holder))
             {

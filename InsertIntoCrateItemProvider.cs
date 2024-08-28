@@ -1,9 +1,10 @@
 ﻿using Kitchen;
+using KitchenMods;
 using Unity.Entities;
 
 namespace KitchenOverstocked
 {
-    internal class InsertIntoCrateItemProvider : ItemInteractionSystem
+    internal class InsertIntoCrateItemProvider : ItemInteractionSystem, IModSystem
     {
         private CCrateItemProvider Provider;
 
@@ -44,17 +45,17 @@ namespace KitchenOverstocked
                 return false;
             }
 
-            if (!Require<CItemHolder>(data.Interactor, out CItemHolder itemHolder) || itemHolder.HeldItem == default(Entity))
+            if (
+                !Require<CItemHolder>(data.Interactor, out CItemHolder itemHolder)
+                || itemHolder.HeldItem == default(Entity)
+            )
             {
-
                 return false;
-
             }
 
             if (!Require<CUpgrade>(itemHolder.HeldItem, out CUpgrade cUpgrade))
             {
                 return false;
-
             }
 
             if (cUpgrade.ID != Provider.applianceId)

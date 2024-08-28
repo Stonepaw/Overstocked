@@ -1,10 +1,11 @@
 ﻿using Kitchen;
+using KitchenMods;
 using Unity.Collections;
 using Unity.Entities;
 
 namespace KitchenOverstocked
 {
-    class CrateCreatorSystem : FranchiseSystem
+    class CrateCreatorSystem : FranchiseSystem, IModSystem
     {
         private EntityQuery garageItemHolders;
         private EntityQuery createCrates;

@@ -1,28 +1,21 @@
 ﻿using Kitchen;
-using KitchenLib;
-using KitchenLib.Event;
-using KitchenLib.Preferences;
 using KitchenMods;
-using System.Collections.Generic;
-using System.Reflection;
-using UnityEngine;
+using PreferenceSystem;
+using PreferenceSystem.Event;
 
 // Namespace should have "Kitchen" in the beginning
 namespace KitchenOverstocked
 {
-    public class Mod : BaseMod, IModSystem
+    public class Mod : IModInitializer
     {
         // GUID must be unique and is recommended to be in reverse domain name notation
         // Mod Name is displayed to the player and listed in the mods menu
         // Mod Version must follow semver notation e.g. "1.2.3"
         public const string MOD_GUID = "com.stonepaw.overstocked";
         public const string MOD_NAME = "Overstocked";
-        public const string MOD_VERSION = "1.5.0";
+        public const string MOD_VERSION = "2.0.0";
         public const string MOD_AUTHOR = "Stonepaw";
         public const string MOD_GAMEVERSION = ">=1.2.0";
-        // Game version this mod is designed for in semver
-        // e.g. ">=1.1.3" current and all future
-        // e.g. ">=1.1.3 <=1.2.3" for all from/until
 
         // Boolean constant whose value depends on whether you built with DEBUG or RELEASE mode, useful for testing
 #if DEBUG
@@ -30,56 +23,90 @@ namespace KitchenOverstocked
 #else
         public const bool DEBUG_MODE = false;
 #endif
-        public static AssetBundle Bundle;
 
-        public static List<int> LoadedAvailableApplianceIds = new();
+        public static PreferenceSystemManager PrefManager;
 
-        public static List<string> LoadedAvailableApplianceNames = new();
-
-        public static Dictionary<string, Dictionary<int, string>> LoadedAvailableAppliances = new();
-
-        public static PreferenceManager PreferenceManager = new("com.stonepaw.overstocked");
-
-        public static PreferenceBool DestroyCratesEnabled;
-
-        public static PreferenceBool AutoRestock;
-
-        public Mod() : base(MOD_GUID, MOD_NAME, MOD_AUTHOR, MOD_VERSION, MOD_GAMEVERSION, Assembly.GetExecutingAssembly()) { }
-
-        protected override void OnInitialise()
+        public static bool AutoRestock
         {
-            LogWarning($"{MOD_GUID} v{MOD_VERSION} in use!");
-            DestroyCratesEnabled = PreferenceManager.RegisterPreference(new PreferenceBool("destroy_crates_enabled", false));
-            AutoRestock = PreferenceManager.RegisterPreference(new PreferenceBool("auto_restock", true));
-            PreferenceManager.Load();
-            initPauseMenu();
+            get { return PrefManager.Get<bool>(AutoRestockKey); }
         }
 
-        protected override void OnUpdate()
+        private static readonly string AutoRestockKey = "auto_restock";
+
+        public static bool DestroyCratesEnabled
         {
+            get { return PrefManager.Get<bool>(DestroyCratesEnabledKey); }
         }
 
-        protected override void OnPostActivate(KitchenMods.Mod mod)
-        {
-        }
+        private static readonly string DestroyCratesEnabledKey = "destroy_crates_enabled";
 
+        public Mod() { }
 
-        private void initPauseMenu()
+        public void PostActivate(KitchenMods.Mod mod)
         {
-            ModsPreferencesMenu<MenuAction>.RegisterMenu(MOD_NAME, typeof(OverstockedMenu<MenuAction>), typeof(MenuAction));
+            PrefManager = new PreferenceSystemManager(MOD_GUID, MOD_NAME);
+
+            // Register our custom ordering sub menu
             Events.PlayerPauseView_SetupMenusEvent += (s, args) =>
             {
-                args.addMenu.Invoke(args.instance, new object[] { typeof(OverstockedMenu<MenuAction>), new OverstockedMenu<MenuAction>(args.instance.ButtonContainer, args.module_list) });
+                args.addMenu.Invoke(
+                    args.instance,
+                    new object[]
+                    {
+                        typeof(OverstockedMenu<MenuAction>),
+                        new OverstockedMenu<MenuAction>(
+                            args.instance.ButtonContainer,
+                            args.module_list
+                        ),
+                    }
+                );
             };
+
+            // Build the preferences system menu
+            PrefManager
+                .AddLabel("Auto Restock")
+                .AddOption(
+                    AutoRestockKey,
+                    true,
+                    new bool[] { false, true },
+                    new string[] { "Disabled", "Enabled" }
+                )
+                .AddLabel("Destroy Crates with Act")
+                .AddOption(
+                    DestroyCratesEnabledKey,
+                    false,
+                    new bool[] { false, true },
+                    new string[] { "Disabled", "Enabled" }
+                )
+                .AddLabel("Order Additional Crates")
+                .AddSelfRegisteredSubmenu<OverstockedMenu<MenuAction>>("Order")
+                .AddInfo(
+                    "Ordered or destroyed crates are not saved automatically. Start a restaurant or combine crates to save the changes to the workshop."
+                );
+
+            PrefManager.RegisterMenu(PreferenceSystemManager.MenuType.PauseMenu);
         }
 
+        public void PreInject() { }
+
+        public void PostInject() { }
+
         #region Logging
-        public static void LogInfo(string _log) { Debug.Log($"[{MOD_NAME}] " + _log); }
-        public static void LogWarning(string _log) { Debug.LogWarning($"[{MOD_NAME}] " + _log); }
-        public static void LogError(string _log) { Debug.LogError($"[{MOD_NAME}] " + _log); }
-        public static void LogInfo(object _log) { LogInfo(_log.ToString()); }
-        public static void LogWarning(object _log) { LogWarning(_log.ToString()); }
-        public static void LogError(object _log) { LogError(_log.ToString()); }
+        internal static void LogInfo(string _log)
+        {
+            Debug.Log($"[{MOD_NAME}] " + _log);
+        }
+
+        internal static void LogWarning(string _log)
+        {
+            Debug.LogWarning($"[{MOD_NAME}] " + _log);
+        }
+
+        internal static void LogError(string _log)
+        {
+            Debug.LogError($"[{MOD_NAME}] " + _log);
+        }
+
         #endregion
     }
 }

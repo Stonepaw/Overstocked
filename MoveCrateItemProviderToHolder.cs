@@ -1,29 +1,30 @@
 ﻿using Kitchen;
-using KitchenLib.References;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using KitchenMods;
 using Unity.Collections;
 using Unity.Entities;
 
 namespace KitchenOverstocked
 {
-    internal class MoveCrateItemProviderToHolder : FranchiseSystem
+    internal class MoveCrateItemProviderToHolder : FranchiseSystem, IModSystem
     {
-
         private EntityQuery crateItemProvidersEntityQuery;
+
+        private int CrateItemReference = -2065950566;
 
         protected override void Initialise()
         {
             base.Initialise();
-            crateItemProvidersEntityQuery = GetEntityQuery(typeof(CItemHolder), typeof(CCrateItemProvider));
-
+            crateItemProvidersEntityQuery = GetEntityQuery(
+                typeof(CItemHolder),
+                typeof(CCrateItemProvider)
+            );
         }
+
         protected override void OnUpdate()
         {
-            using var crateItemProviders = crateItemProvidersEntityQuery.ToEntityArray(Allocator.TempJob);
+            using var crateItemProviders = crateItemProvidersEntityQuery.ToEntityArray(
+                Allocator.TempJob
+            );
 
             foreach (Entity entity in crateItemProviders)
             {
@@ -48,8 +49,11 @@ namespace KitchenOverstocked
                 }
 
                 var ctx = new EntityContext(EntityManager);
-                var crateEntity = ctx.CreateItem(ItemReferences.Crate);
-                Set(crateEntity, new CUpgrade { ID = (int)crateItemProvider.applianceId, IsFromLevel = false });
+                var crateEntity = ctx.CreateItem(CrateItemReference);
+                Set(
+                    crateEntity,
+                    new CUpgrade { ID = (int)crateItemProvider.applianceId, IsFromLevel = false }
+                );
                 ctx.UpdateHolder(crateEntity, entity);
             }
         }

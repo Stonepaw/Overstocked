@@ -1,14 +1,10 @@
 ﻿using Kitchen;
-using KitchenData;
-using KitchenLib;
-using KitchenLib.References;
-using KitchenLib.Utils;
-using Unity.Collections;
+using KitchenMods;
 using Unity.Entities;
 
 namespace KitchenOverstocked
 {
-    class DisableCrateItemProviderSystem : FranchiseSystem
+    class DisableCrateItemProviderSystem : FranchiseSystem, IModSystem
     {
         private EntityQuery crateItemProviders;
 
@@ -18,9 +14,10 @@ namespace KitchenOverstocked
             crateItemProviders = GetEntityQuery(typeof(CCrateItemProvider));
             RequireForUpdate(crateItemProviders);
         }
+
         protected override void OnUpdate()
         {
-            if (!Mod.AutoRestock.Get())
+            if (!Mod.AutoRestock)
             {
                 Mod.LogInfo("Disabling providers");
                 EntityManager.RemoveComponent<CCrateItemProvider>(crateItemProviders);
