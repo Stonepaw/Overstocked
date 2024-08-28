@@ -17,9 +17,9 @@ namespace KitchenOverstocked
         // Mod Version must follow semver notation e.g. "1.2.3"
         public const string MOD_GUID = "com.stonepaw.overstocked";
         public const string MOD_NAME = "Overstocked";
-        public const string MOD_VERSION = "1.4.1";
+        public const string MOD_VERSION = "1.5.0";
         public const string MOD_AUTHOR = "Stonepaw";
-        public const string MOD_GAMEVERSION = ">=1.1.8";
+        public const string MOD_GAMEVERSION = ">=1.2.0";
         // Game version this mod is designed for in semver
         // e.g. ">=1.1.3" current and all future
         // e.g. ">=1.1.3 <=1.2.3" for all from/until
@@ -66,10 +66,10 @@ namespace KitchenOverstocked
 
         private void initPauseMenu()
         {
-            ModsPreferencesMenu<PauseMenuAction>.RegisterMenu(MOD_NAME, typeof(OverstockedMenu<PauseMenuAction>), typeof(PauseMenuAction));
-            Events.PreferenceMenu_PauseMenu_CreateSubmenusEvent += (s, args) =>
+            ModsPreferencesMenu<MenuAction>.RegisterMenu(MOD_NAME, typeof(OverstockedMenu<MenuAction>), typeof(MenuAction));
+            Events.PlayerPauseView_SetupMenusEvent += (s, args) =>
             {
-                args.Menus.Add(typeof(OverstockedMenu<PauseMenuAction>), new OverstockedMenu<PauseMenuAction>(args.Container, args.Module_list));
+                args.addMenu.Invoke(args.instance, new object[] { typeof(OverstockedMenu<MenuAction>), new OverstockedMenu<MenuAction>(args.instance.ButtonContainer, args.module_list) });
             };
         }
 

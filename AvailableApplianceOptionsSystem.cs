@@ -60,6 +60,7 @@ namespace KitchenOverstocked
             ApplianceReferences.ShoeRackWellies,
             ApplianceReferences.ShoeRackWorkBoots,
             ApplianceReferences.TrayStand,
+            -940358190, // Leftover Bags Station
         };
 
         private static readonly int[] consumables =
