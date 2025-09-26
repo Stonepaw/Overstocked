@@ -2,6 +2,7 @@
 using KitchenMods;
 using PreferenceSystem;
 using PreferenceSystem.Event;
+using UnityEngine;
 
 // Namespace should have "Kitchen" in the beginning
 namespace KitchenOverstocked
@@ -13,9 +14,9 @@ namespace KitchenOverstocked
         // Mod Version must follow semver notation e.g. "1.2.3"
         public const string MOD_GUID = "com.stonepaw.overstocked";
         public const string MOD_NAME = "Overstocked";
-        public const string MOD_VERSION = "2.0.0";
+        public const string MOD_VERSION = "2.1.0";
         public const string MOD_AUTHOR = "Stonepaw";
-        public const string MOD_GAMEVERSION = ">=1.2.0";
+        public const string MOD_GAMEVERSION = ">=1.3.0";
 
         // Boolean constant whose value depends on whether you built with DEBUG or RELEASE mode, useful for testing
 #if DEBUG
