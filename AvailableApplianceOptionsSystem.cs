@@ -19,6 +19,7 @@ namespace KitchenOverstocked
             1551609169, // Bin
             -571205127, // BlueprintCabinet
             1139247360, // BlueprintUpgradeDesk
+            -773196462, // Buffet Counter
             1648733244, // CoffeeTable
             -1906799936, // Combiner
             -1248669347, // Countertop
@@ -92,6 +93,7 @@ namespace KitchenOverstocked
             -1723125645, // Cookie Tray
             -315287689, // Cupcake tray
             2136474391, // Doughnut Tray
+            -217313684, // Mixing Bowls
         };
 
         private static readonly int[] cooking =
